@@ -1,0 +1,49 @@
+cluster.name: PD-Cluster
+node.name: ELAS1
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.10.104
+http.port: 9200
+discovery.seed_hosts: ["192.168.10.104","192.168.10.108","192.168.10.109"]
+cluster.initial_master_nodes: ["192.168.10.104", "192.168.10.108"]
+node.master: true
+node.voting_only: false
+node.data: true
+node.ingest: trueno
+node.data: true
+node.ingest: true
+node.ml: false
+cluster.remote.connect: false
+
+
+cluster.name: PD-Cluster
+node.name: KIBANA1
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.10.108
+http.port: 9200
+discovery.seed_hosts: ["192.168.10.104","192.168.10.108","192.168.10.109"]
+cluster.initial_master_nodes: ["192.168.10.104", "192.168.10.108"]
+node.master: true
+node.voting_only: false
+node.data: true
+node.ingest: trueno
+node.data: true
+node.ingest: true
+node.ml: false
+cluster.remote.connect: false
+
+cluster.name: PD-Cluster
+node.name: LOGSTASH1
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.10.109
+http.port: 9200
+discovery.seed_hosts: ["192.168.10.104","192.168.10.108","192.168.10.109"]
+cluster.initial_master_nodes: ["192.168.10.104", "192.168.10.108"]
+node.master: true
+node.voting_only: false
+node.data: true
+node.ingest: true
+node.ml: false
+cluster.remote.connect: false

@@ -1,0 +1,26 @@
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=5157
+EventType=0
+Type=Information
+ComputerName=CYF-TS3.cyforce.dom
+TaskCategory=Filtering Platform Connection
+OpCode=Info
+RecordNumber=49762224
+Keywords=Audit Failure
+Message=The Windows Filtering Platform has blocked a connection.
+Application Information:
+Process ID:		4
+Application Name:	System
+Account Name:		criddock
+Network Information:
+Direction:		Inbound
+Source Address:		172.16.30.145
+Source Port:		5
+Destination Address:	172.16.30.211
+Destination Port:		0
+Protocol:		1
+Filter Information:
+Filter Run-Time ID:	68256
+Layer Name:		Receive/Accept
+Layer Run-Time ID:	44

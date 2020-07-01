@@ -1,0 +1,156 @@
+input {
+    beats {
+        port => "5044"
+    }
+}
+
+
+filter 		{
+
+
+# This "UUID" is a LOGSTASH plugin that creates a new unique ID and uses if for later processing.
+			uuid {
+                id => "UniqueLogstashID"
+		target => "uid"
+                overwrite => true
+				}
+				
+mutate {
+    gsub => [
+      "message", "^\s*", "",
+      "message", "\s*$", "",
+      "message", "\s*=\s*", "=",
+      "message", "\s*\|\s*", "|"
+    ]
+  }				
+
+# This "KV" is a LOGSTASH filter that process for Key-Value pairs, looks for the ":" sign as a delimiter.
+
+kv {
+			#source => "@message"
+                        id => "SplitOnColon"
+                        value_split => ":"
+			field_split => "\n"
+			#field_split => "&?"
+			#field_split => "&?&"
+			#whitespace => strict
+			#trim_key => "<>\[\]\  \b\s,"
+			#remove_char_key => "<>\[\s*],"
+			target => "temp_titan1"
+                        
+                }
+				
+mutate {
+
+gsub => [
+      
+# This loads the titan.temp1 array and removes the spaces from the column names
+	  
+  "temp_titan1", "^\s*", "",
+  "temp_titan1", "\s*$", "",
+  "temp_titan1", "\s*=\s*", "=",
+  "temp_titan1", "\s*\|\s*", "|"
+	  
+	    ]
+  }		
+				
+								
+# This "KV" is a LOGSTASH filter that process for Key-Value pairs, looks for the "=" sign as a delimiter.
+
+kv {
+                      id => "SplitWinLogs"
+                      value_split => "="
+                      field_split => "\n"
+                      target => "temp_titan"
+      }
+				
+				
+  
+				
+
+mutate {
+
+# # add_field => {"SOURCEME" => "GROOTSYS"}
+# # This section grabs the output of the preceding KV, which mines the content of the payload "message" field and creates index fields and # values, it then creates new fields and applies the extracted values to the new fields
+
+			add_field => {"[titan][_id]"=>"%{uid}"}
+
+                        add_field => {"[titan][timestamp]"=>"%{@timestamp}"}
+
+                        add_field => {"[titan][type]" => "wineventlog"}
+
+                        add_field => {"[titan][eventcode]" => "%{[temp_titan][EventCode]}"}
+
+                        remove_field => [ "@ingest_time" ]
+
+                        remove_field => [ "uid" ]
+
+## The values are extracted from the native payload, they are extracted from the "message" field using Colon as
+## delimeter                       
+
+			add_field => {"[titan][UserName]" => "%{[temp_titan1][Account Name]}"}
+			
+			add_field => {"[titan][AccountDomain]" => "%{[temp_titan1][Account Domain]}"}	 	
+
+			add_field => {"[titan][SourceAddress]" => "%{[temp_titan1][Source Address]}"}						
+						
+			add_field => {"[titan][SourcePort]" => "%{[temp_titan1][Source Port]}"}
+						
+						
+## The values are extracted from the native payload, they are extracted from the "message" field using "=" as
+## delimeter						
+						
+			add_field => {"[titan][level]" => "%{[temp_titan][Type]}"}
+						
+			add_field => {"[titan][TaskCat]" => "%{[temp_titan][TaskCategory]}"}
+						
+		        add_field => {"[titan][source]" => "%{[temp_titan][SourceName]}"}
+
+                        add_field => {"[titan][host]" => "%{[temp_titan][ComputerName]}"}
+
+			add_field => {"[titan][result]" => "%{[temp_titan][Keywords]}"}
+						
+			add_field => {"[titan][logname]" => "%{[temp_titan][LogName]}"}
+						
+                        add_field => {"[titan][message]" => "%{message}"}						
+				
+                        remove_field => [ "message" ]
+
+                        remove_field => [ "temp_titan" ]
+						
+			remove_field => [ "temp_titan1" ]				
+
+			
+	}
+
+	
+
+# REM'ed this line out because of the previous KV directives
+
+ruby {
+  code => "
+  event.to_hash.keys.each { |k|
+  event.remove(k) if k.start_with?('<')
+  }
+  "
+  }		
+
+  
+		
+	}
+
+output {
+
+
+
+elasticsearch {
+   
+ hosts => ["10.100.114.16:9200"]
+   user => "elasticsearch"
+   password => "changeme"
+		 }
+
+}
+
+
+

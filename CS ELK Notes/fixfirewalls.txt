@@ -1,0 +1,1 @@
+mv /root/userscript/firewalld.service /usr/lib/systemd/system/ 

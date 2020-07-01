@@ -1,0 +1,16 @@
+
+systemctl start firewalld
+firewall-cmd --add-forward-port=port=514:proto=udp:toport=5014:toaddr= --permanent
+firewall-cmd --permanent --zone=public --add-source=10.100.5.0/24
+firewall-cmd --permanent --zone=public --add-port=9200/tcp
+firewall-cmd --permanent --zone=public --add-port=9200/udp
+firewall-cmd --permanent --zone=public --add-port=9300/tcp
+firewall-cmd --permanent --zone=public --add-port=9300/udp
+firewall-cmd --permanent --zone=public --add-port=5044/tcp
+firewall-cmd --permanent --zone=public --add-port=5044/udp
+systemctl restart firewalld
+firewall-cmd --list-all
+
+
+
+

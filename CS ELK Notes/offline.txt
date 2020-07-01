@@ -1,0 +1,1 @@
+./bin/logstash-plugin install file:///home/TITAN-E07-R02/logstash-offline-plugins-6.6.1.zip

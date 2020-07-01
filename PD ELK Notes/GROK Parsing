@@ -1,0 +1,37 @@
+<189>35: Gateway: *Jun 22 13:17:06: %DUAL-5-NBRCHANGE: EIGRP-IPv4 100: Neighbor 192.168.20.10 (Interface:GigabitEthernet2/0) is up: new adjacency
+%{INT:Numb}: %{HOSTNAME:hostname}: %{DATA:Ignore}%{CISCOTIMESTAMP:cisco_timestamp}: %%{CISCO_REASON:facility}-%{INT:severity_level}-%{CISCO_REASON:RouterConfigEvent}: %{GREEDYDATA:RouterAnnounce}
+
+
+
+<189>33: MidWest1: *Jun 23 15:16:13: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: admin] [Source: UNKNOWN] [localport: 0] at 15:16:13 UTC Tue Jun 23 2020
+
+
+<189>35:  %{INT:ID}: 
+
+%{INT:Numb}: %{HOSTNAME:hostname}: %{DATA:Ignore}%{CISCOTIMESTAMP:cisco_timestamp}: %%{CISCO_REASON:facility}-%{INT:severity_level}-%{CISCO_REASON:facility_mnemonic}:
+
+ EIGRP-IPv4 100: Neighbor 192.168.20.10 (GigabitEthernet2/0) is up: new adjacency
+ %{GREEDYDATA:RouterAnnounce}\s*%{HOSTNAME:hostname}\s*%{IP:ipaddress}\s*%{GREEDYDATA:RouterAnnounce}\s*%{WORD:toHostname}
+ 
+ 
+ <189>35: EIGRP-IPv4 100: Neighbor 192.168.20.10 (GigabitEthernet2/0) is up: new adjacency
+%{INT:Numb}: %{GREEDYDATA:RouterAnnounce}\s*%{HOSTNAME:hostname}\s*%{IP:ipaddress}\s*%{GREEDYDATA:RouterAnnounce}\s*%{WORD:toHostname}
+
+
+<189>35: Gateway: *Jun 22 13:17:06: EIGRP-IPv4 100: Neighbor 192.168.20.10 (Interface: GigabitEthernet2/0) is up: new adjacency
+%{INT:Numb}: %{HOSTNAME:hostname}: %{DATA:Ignore}%{CISCOTIMESTAMP:cisco_timestamp}: %{GREEDYDATA:RouterAnnounce}\s*%{HOSTNAME:hostname}\s*%{IP:ipaddress}\s*%{GREEDYDATA:RouterAnnounce}\s*%{WORD:toHostname}
+
+
+
+2019-03-15 14:42:38,910 INFO  (Interfaces:GATEWAY1) [CID:60c24e3e-c8f9-43e4-bedf-59e861bfabf9] [http-bio-8080-exec-3] [TariffRuleServiceImpl.java:569] no approach by ShouldAddApproachToFixedPrice checkbox : false
+
+%{DATE:date} %{TIME:time} %{WORD:level}  \(Interfaces:%{DATA}\) \[CID:%{DATA:CID}\] \[%{DATA:thread}] \[%{DATA:class}] %{GREEDYDATA:message}
+
+
+<189>33: MidWest1: *Jun 23 15:16:13: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: admin] [Source: UNKNOWN] [localport: 0] at 15:16:13 UTC Tue Jun 23 2020
+
+%{INT:Numb}: %{HOSTNAME:hostname}: %{DATA:Ignore}%{CISCOTIMESTAMP:cisco_timestamp}: %%{CISCO_REASON:facility}-%{INT:severity_level}-%{CISCO_REASON:RouterConfigEvent}: %{GREEDYDATA:RouterAnnounce}\[user: %{DATA:user}\] \[Source: %{DATA:source}\] \[localport: %{DATA:localport}\]
+
+
+
+

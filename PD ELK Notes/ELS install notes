@@ -1,0 +1,112 @@
+audo su -
+https://linuxize.com/post/install-java-on-debian-9/
+
+
+*******************************************************
+TO Start ES to start automatically after the computer boots up
+*******************************************************
+To check what is running: SystemD or sysV
+ps -p 1
+
+Use the update-rc.d command to configure Elasticsearch to start automatically when the system boots up:
+if sysV
+sudo update-rc.d elasticsearch defaults 95 10
+sudo update-rc.d kibana defaults 95 10
+
+To start |stop|status
+sudo -i service elasticsearch start  |stop|status
+sudo -i service kibana start |stop|status
+
+
+df
+if systemD
+To create as service
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable elasticsearch.service
+sudo /bin/systemctl enable kibana.service
+sudo /bin/systemctl enable logstash.service
+sudo /bin/systemctl enable nginx.service
+sudo /bin/systemctl enable filebeat.service
+
+To start|stop|status  as service
+sudo systemctl start|stop|status elasticsearch.service
+sudo systemctl start|stop|status kibana.service
+sudo systemctl start|stop|status logstash.service
+
+
+
+To tail the journal
+
+sudo journalctl -f
+
+
+NGINX install:
+
+https://documentation.wazuh.com/3.9/installation-guide/installing-elastic-stack/protect-installation/kibana_ssl.html
+
+NGINX SSL proxy for Kibana (Debian-based distributions)
+Install NGINX:
+
+apt-get install nginx
+Install your SSL certificate and private key:
+If you have a valid signed certificate, copy your key file <ssl_key> and your certificate file <ssl_pem> to their proper locations:
+
+mkdir -p /etc/ssl/certs /etc/ssl/private
+cp <ssl_pem> /etc/ssl/certs/kibana-access.pem
+cp <ssl_key> /etc/ssl/private/kibana-access.key
+If you do not have a valid signed certificate, create a self-signed certificate as follows:
+
+mkdir -p /etc/ssl/certs /etc/ssl/private
+openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/kibana-access.key -out /etc/ssl/certs/kibana-access.pem
+  Generating a 2048 bit RSA private key
+  .............+++
+  ..+++
+  writing new private key to '/etc/ssl/private/kibana-access.key'
+  -----
+Configure NGINX as an HTTPS reverse proxy to Kibana:
+
+cat > /etc/nginx/sites-available/default <<\EOF
+server {
+    listen 80;
+    listen [::]:80;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 default_server;
+    listen            [::]:443;
+    ssl on;
+    ssl_certificate /etc/ssl/certs/kibana-access.pem;
+    ssl_certificate_key /etc/ssl/private/kibana-access.key;
+    access_log            /var/log/nginx/nginx.access.log;
+    error_log            /var/log/nginx/nginx.error.log;
+    location / {
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/conf.d/kibana.htpasswd;
+        proxy_pass http://localhost:5601/;
+    }
+}
+EOF
+Note
+
+We configure Nginx in order to encapsulate the IP address of the Kibana server. This configuration allows Kibana requests to be redirected to HTTPS. When using this configuration, it is recommended that the file /etc/kibana/kibana.yml be edited to set the field server.host to localhost. The Kibana service must be restarted to apply this change.
+
+Enable authentication by htpasswd
+Install the package apache2-utils:
+
+apt-get install apache2-utils
+Generate the .htpasswd file replacing <user> below with your chosen username:
+
+htpasswd -c /etc/nginx/conf.d/kibana.htpasswd <user>
+Restart NGINX:
+For Systemd:
+
+systemctl restart nginx
+For SysV Init:
+
+service nginx restart
+
+
+
+Tail command
+tail -f logstash-slowlog-plain.log

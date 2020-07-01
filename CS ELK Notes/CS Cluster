@@ -1,0 +1,146 @@
+[10:56 AM] Riddock, Cary
+    
+Kibana:
+cluster.name: DILWORTH
+node.master: true
+node.data: true
+node.name: ELAS-KIBANA
+discovery.seed_hosts: ["192.168.87.29","192.168.87.33","192.168.87.34"]
+cluster.initial_master_nodes: ["192.168.87.34"]
+node.voting_only: false
+node.ingest: false
+node.ml: false
+xpack.ml.enabled: true
+cluster.remote.connect: false
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.87.34
+http.port: 9200
+
+
+discovery.seed_hosts: ["ESNODE1", "ESNODE2","ESNODE3"]
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+cluster.initial_master_nodes: ["ES-Node1", "ES-Node2"]
+
+
+Elasticsearch:
+cluster.name: DILWORTH
+node.name: ELAS-ELAS
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.87.29
+http.port: 9200
+discovery.seed_hosts: ["192.168.87.29","192.168.87.33","192.168.87.34"]
+node.master: true
+node.voting_only: false
+node.data: true
+node.ingest: true
+node.ml: false
+cluster.remote.connect: false
+
+
+cluster.name: deecastle
+node.name: ELAS-LOGST
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.198.134
+http.port: 9200
+discovery.seed_hosts: ["192.168.198.132","192.168.198.133","192.168.198.134"]
+node.master: true
+node.voting_only: false
+node.data: true
+node.ingest: true
+node.ml: false
+cluster.remote.connect: false
+
+luster.name: deecastle
+
+node.name: LogNode
+#path.data: /var/lib/elasticsearch
+#path.logs: /var/log/elasticsearch
+network.host: 192.168.198.133
+http.port: 9200
+discovery.seed_hosts: ["192.168.198.132","192.168.198.133","192.168.198.134"]
+node.master: true
+node.voting_only: false
+node.data: true
+node.ingest: true
+node.ml: false
+cluster.remote.connect: false
+
+
+
+
+    stop elasticsearch
+    rm -rf /var/log/elasticsearch/*
+rm -rf /var/lib/elasticsearch/*
+    ``````` restart elasticsearch
+
+
+
+    https://www.golinuxcloud.com/setup-configure-elasticsearch-cluster-7-linux/
+#1-ELK Stack: Configure elasticsearch cluster setup CentOS/RHEL 7/8 | GoLinuxCloudElasticsearch Tutorial on ELk Stack to configure elasticsearch cluster in RHEL/CentOS 7/8 Linux with examples. Get cluster helath status, node types, statswww.golinuxcloud.com?[10:58 AM] Riddock, Cary
+    
+Install Prerequisites:
+sudo apt install default-jre
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo sh -c 'echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" > /etc/apt/sources.list.d/elastic-7.x.list'
+sudo apt update
+sudo apt upgrade
+
+
+Create new user:
+
+
+Add user to SUDO list:
+
+
+Login:
+sudo su -
+
+
+Install ELK Programs:
+sudo apt install logstash
+sudo apt install elasticsearch
+sudo apt install kibana
+
+
+Install UFW Firewall:
+sudo apt install ufw
+
+
+Create firewall port allowance rules:
+sudo ufw allow 22
+sudo ufw allow 9200
+sudo ufw allow 9300
+sudo ufw allow 9400
+sudo ufw allow 5601
+sudo ufw allow 5044
+sudo ufw allow 5600
+
+
+Setup services to start at boot:
+sudo systemctl enable logstash.service
+sudo systemctl start logstash.service
+
+
+sudo systemctl enable elasticsearch.service
+sudo systemctl start elasticsearch.service
+
+
+sudo systemctl enable kibana.service
+sudo systemctl start kibana.service
+ 
+
+
+
+
+
+
+
+
+
+
+

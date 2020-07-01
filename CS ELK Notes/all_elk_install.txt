@@ -1,0 +1,194 @@
+#!/bin/bash
+#
+LOGS=/tmp/$(hostname)_install.log
+#
+
+dependency_check_rpm() {
+    java -version
+    if [ $? -ne 0 ]
+        then
+         echo " Installing the correct version of Java " >> $LOGS
+                rpm -ivh /home/TITAN-E07-R02/jre* >> $LOGS
+        # Checking if java installed is less than version 7. If yes, installing Java 8. As logstash
+& Elasticsearch require Java 7 or later.
+        elif [ "`java -version 2> /tmp/version && awk '/version/ { gsub(/"/, "", $NF); print ( $NF <
+ 1.8 ) ? "YES" : "NO" }' /tmp/version`" == "YES" ]
+            then
+          rpm -ivh /home/TITAN-E07-R02/jre* >> $LOGSecho "you have the wrong java version, Please verify" >> $LOGS
+        exit
+    fi
+}
+
+install_java () {
+#       Check for java version
+
+        echo "--------- Starting installation of java ---------------" >> $LOGS
+
+        JAVA=`java -version 2>&1 >/dev/null |grep -v Java | awk '{print $3}'`
+        JAVA2=`java -version 2>&1 >/dev/null |grep -v Java |awk -F ":" '{print $4 }'`
+        echo " " >> $LOGS
+        echo "the current java version before installation is" $JAVA >> $LOGS
+        echo " " >> $LOGS
+#       echo $JAVA2
+
+        if [[ $JAVA == '"1.8.0_191"' ]]; then
+                echo "your version of java $JAVA is correct" >> $LOGS
+
+        elif [[ $JAVA2 == *"command not found"* ]]; then
+                echo " Installing the correct version of Java " >> $LOGS
+                rpm -ivh /tmp/jre* >> $LOGS
+
+        else
+                echo "you have the wrong java version, Please verify" >> $LOGS
+        exit
+        fi
+        echo " " >> $LOGS
+
+        JAVA=`java -version 2>&1 >/dev/null |grep -v Java | awk '{print $3}'`
+        echo "$JAVA is now the current version of Java"  >> $LOGS
+
+        echo " "  >> $LOGS
+}
+
+#       Install Elasticsearch
+install_elasticsearch () {
+
+        echo " --------  Starting installation of elasticsearch -------- " >> $LOGS
+        echo " "  >> $LOGS
+
+#        Check if Elasticsearch is installed
+
+#       if [[ `ls /var/lib/ |grep elast* ` == elasticsearch ]]; then
+        if [[ `yum list |grep -i elasticsearch |awk '{ print $3 }'` == installed ]]; then
+                 echo "elasticsearch id arlready installed " >> $LOGS
+        else
+                 echo "Installing ElasticSearch"  >> $LOGS
+                rpm -ivh /home/TITAN-E07-R02/elasticsearch-6.5.3.rpm
+        fi
+                echo " " >> $LOGS
+
+#       reload Daemon
+        systemctl daemon-reload
+
+#        Enable Elasticsearch and create Symbolic link
+        systemctl enable elasticsearch.service
+
+
+        ls -al /etc/systemd/system/multi-user.target.wants |grep -i elastic  >> $LOGS
+#       Update config file
+        #cat /tmp/yml* >>/etc/elasticsearch/elasticsearch.yml
+
+#       Add Firewall entry and restart service service
+        firewall-cmd --zone=public --add-port=9200/tcp --permanent
+        systemctl restart firewalld
+
+        echo " "  >> $LOGS
+        echo " ____________________________ " >> $LOGS
+        echo " "  >> $LOGS
+#       Start Elasticsearch
+        systemctl start elasticsearch.service
+
+#       Check status of Elasticsearch
+        systemctl status elasticsearch.service  >> $LOGS
+
+
+        echo " " >> $LOGS
+        echo " ____________________________ " >> $LOGS
+        echo " " >> $LOGS
+#       Verify installation
+
+        IP=`hostname -i |awk '{print $2}'`
+#
+        curl http://$IP:9200  >> /tmp/$(hostname)_install.log
+}
+
+#       Install Kibana
+
+install_kibana () {
+
+#       echo " -------- Installing Kibana --------- " >> $LOGS
+#        Check if kibana is installed
+
+        if [[ `yum list |grep -i kibana |awk '{ print $3 }'` == installed ]]; then
+                 echo "kibana is arlready installed " >> $LOGS
+        else
+                 echo "Installing kibana"  >> $LOGS
+                rpm -ivh /home/TITAN-E07-R02/kibana-6.5.3-x86_64.rpm
+        fi
+                echo " " >> $LOGS
+
+#       reload Daemon
+        systemctl daemon-reload
+
+#        Enable Kibana and create Symbolic link
+        systemctl enable kibana.service
+
+
+        ls -al /etc/systemd/system/multi-user.target.wants |grep -i kibana  >> $LOGS
+#       Start Kibana
+        systemctl start kibana.service
+
+#       Check status of Kibana
+        systemctl status kibana.service  >> $LOGS
+
+
+        echo " " >> $LOGS
+        echo " ____________________________ " >> $LOGS
+        echo " " >> $LOGS
+#       Verify installation
+}
+
+# Install logstash
+
+install_logstash () {
+
+        echo " -------- Installing logstash --------- " >> $LOGS
+#        Check if logstash is installed
+
+        if [[ `yum list |grep -i logstash |awk '{ print $3 }'` == installed ]]; then
+                 echo "logstash is arlready installed " >> $LOGS
+        else
+                 echo "Installing logstash"  >> $LOGS
+                rpm -ivh /home/TITAN-E07-R02/logstash-6.5.3.rpm
+        fi
+                echo " " >> $LOGS
+
+#       reload Daemon
+        systemctl daemon-reload
+
+#        Enable Logstash and create Symbolic link
+        systemctl enable logstash.service
+
+
+        ls -al /etc/systemd/system/multi-user.target.wants |grep -i logstash  >> $LOGS
+#       Start logstash
+        systemctl start logstash.service
+
+#       Check status of logstash
+        systemctl status logstash.service  >> $LOGS
+
+
+        echo " " >> $LOGS
+        echo " ____________________________ " >> $LOGS
+        echo " " >> $LOGS
+#       Verify installation
+}
+
+case "$1" in
+elasticsearch)  install_java
+                install_elasticsearch
+                ;;
+kibana)         install_java
+                install_elasticsearch
+                install_kibana
+                ;;
+
+logstash)       install_java
+                install_elasticsearch
+                install_logstash
+                ;;
+esac
+
+
+
+[root@logstash tmp]#

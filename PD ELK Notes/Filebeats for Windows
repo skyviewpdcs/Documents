@@ -1,0 +1,11 @@
+To resolve this problem from terminal you must remove/comment this CD-ROM repository source directly from /etc/apt/sources.list
+
+ sudo nano /etc/apt/sources.list
+and comment or remove lines that include cdrom. eg:
+
+deb cdrom:[Ubuntu-Server 16.04 LTS _Xenial Xerus_ - Release amd64 (20160420.3)]/ xenial main
+
+
+filebeat 
+
+https://stackoverflow.com/questions/41751605/running-filebeat-in-windows

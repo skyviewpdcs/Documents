@@ -1,0 +1,28 @@
+
+chown -R elasticsearch:elasticsearch /opt/elkstore/var/log/elasticsearch/
+chown -R elasticsearch:elasticsearch /opt/elkstore/var/lib/elasticsearch/
+
+chown -R logstash:logstash /opt/elkstore/var/lib/logstash/
+chown -R logstash:logstash /opt/elkstore/var/log/logstash/
+
+chown -R kibana:kibana /opt/elkstore/var/log/kibana/
+
+
+
+chown -R root:root /var/log/
+chown -R root:root /opt/elkstore/var/log/
+chown -R root:root /opt/elkstore/var/
+
+chown -R elasticsearch:elasticsearch /opt/elkstore/var/log/elasticsearch/
+chown -R logstash:logstash /opt/elkstore/var/log/logstash/
+
+
+
+chown -R logstash:logstash /opt/elkstore/var/lib/logstash/
+chown -R elasticsearch:elasticsearch /opt/elkstore/var/lib/elasticsearch/
+
+
+
+tail -f /opt/elkstore/var/log/elasticsearch/TITAN-TESCL.log
+
+chown -R elasticsearch:elasticsearch /var/log/elasticsearch/

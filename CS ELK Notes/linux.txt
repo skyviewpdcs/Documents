@@ -1,0 +1,93 @@
+./bin/logstash-plugin install file:///home/TITAN-E07-R02/logstash-offline-plugins-6.5.4.zip
+
+
+/home/TITAN-E07-R02
+
+}Y[*o4T),Vy,-'
+
+Number of CPUs
+grep ^cpu\\scores /proc/cpuinfo | uniq |  awk '{print $4}' 
+
+RHEL Version
+cat /etc/redhat-release
+
+Total Memory
+cat /proc/meminfo
+
+Free Disk Space
+sudo cat /etc/fstab
+lsscsi
+dmesg | grep -i 'sd.*gib'
+
+
+Copy files to Linux hosts
+sftp TITAN-E07-R02@10.100.114.16
+put *.*
+
+Tail Logs
+tail -f /var/log/kibana/kibana.stderr
+
+Check network
+netstat -a | egrep 'Proto|LISTEN' | grep :
+
+tail -f /var/log/logstash/logstash-plain.log
+
+To cure logstash java errors in log
+mount -o remount,exec /tmp. 
+
+Cluster Name:TITAN-DEVCL
+Nodename: DEV-ELAS1
+
+node.master: true
+node.data: true
+
+
+discovery.zen.ping.unicast.hosts: ["10.100.114.12","10.100.114.13", "10.100.114.14", "10.100.114.15", "10.100.114.16"]
+#
+# Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
+#
+discovery.zen.minimum_master_nodes: 3
+
+bootstrap.system_call_filter: false
+
+
+Check owner 
+ls -l /cyfelas/var/lib/elasticsearch
+
+Change Owner - recursive
+sudo chown -R elasticsearch:elasticsearch /parent_dir
+
+chown -R logstash:logstash /opt/elkstore/var/log/logstash/
+
+
+
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /opt/elkstore/var/lib/elasticsearch
+# path.data: /opt/elkstore/data/elasticsearch
+#
+# Path to log files:
+#
+path.logs: /opt/elkstore/var/log/elasticsearch
+# path.logs: /opt/elkstore/log/elasticsearch
+
+
+
+# If id command returns zero, you've got root access.
+if [ $(id -u) -eq 0 ];
+then # you are root, set red colour prompt
+  PS1="\\[$(tput setaf 1)\\]\\u@\\w #/$(tput sgr0)(GRAPH-PROD)"
+else # normal
+   PS1="\\u \\w (GRAPH-PROD) $"
+fi
+
+
+tail -f /opt/elkstore/var/log/logstash/logstash-plain.log
+
+
+chown -R logstash:logstash /opt/elkstore/var/lib/logstash/
+
+Offline Plugin installation
+
+./bin/logstash-plugin install file:///home/TITAN-E07-R02/logstash-offline-plugins-6.5.4.zip
+
